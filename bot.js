@@ -14,8 +14,8 @@ class DentaBot extends ActivityHandler {
         if (!configuration) throw new Error('[QnaMakerBot]: Missing parameter. configuration is required');
 
         // create a QnAMaker connector
-        this.QnAMaker = new QnAMaker();
-
+        this.qnaMaker = new QnAMaker(configuration.QnAConfiguration, qnaOptions);
+        
         // create a DentistScheduler connector
         this.dentistscheduler = new DentistScheduler(configuration.SchedulerConfiguration);
 
@@ -38,8 +38,8 @@ class DentaBot extends ActivityHandler {
             //  return;
             // }
             // else {...}
-            if (LuisResult.luisResult.prediction.topIntent === 'getAvailability' &&
-                LuisResult.intents.getAvailability.score > 0.6 &&
+            if (LuisResult.luisResult.prediction.topIntent === 'GetAvailability' &&
+                LuisResult.intents.GetAvailability.score > 0.6 &&
                 LuisResult.entities.$instance &&
                 LuisResult.entities.$instance.timeday &&
                 LuisResult.entities.$instance.timeday[0]
