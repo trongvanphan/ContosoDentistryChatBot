@@ -38,7 +38,7 @@ server.listen(process.env.port || process.env.PORT || 3978, () => {
 //     appId: process.env.MicrosoftAppId,
 //     appPassword: process.env.MicrosoftAppPassword
 // });
-
+console.log(process.env);
 const credentialsFactory = new ConfigurationServiceClientCredentialFactory({
     MicrosoftAppId: process.env.MicrosoftAppId,
     MicrosoftAppPassword: process.env.MicrosoftAppPassword,
@@ -79,21 +79,22 @@ const QnAConfiguration = {
     host: process.env.QnAEndpointHostName
 };
 
-const LuisConfiguration = {
-    applicationId: process.env.LuisAppId,
-    endpointKey: process.env.LuisAPIKey,
-    endpoint: process.env.LuisAPIHostName
-};
+// const LuisConfiguration = {
+//     applicationId: process.env.LuisAppId,
+//     endpointKey: process.env.LuisAPIKey,
+//     endpoint: process.env.LuisAPIHostName
+// };
 
-const SchedulerConfiguration = {
-    SchedulerEndpoint: process.env.SchedulerEndpoint
-};
+// const SchedulerConfiguration = {
+//     SchedulerEndpoint: process.env.SchedulerEndpoint
+// };
 
 // pack each service configuration into
 const configuration = {
-    QnAConfiguration,
-    LuisConfiguration,
-    SchedulerConfiguration
+    QnAConfiguration
+    // ,
+    // LuisConfiguration,
+    // SchedulerConfiguration
 };
 
 // Create the main dialog.
