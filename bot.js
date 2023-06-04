@@ -4,8 +4,8 @@
 const { ActivityHandler, MessageFactory } = require('botbuilder');
 
 const { QnAMaker } = require('botbuilder-ai');
-// const DentistScheduler = require('./dentistscheduler');
-// const IntentRecognizer = require('./intentrecognizer');
+const DentistScheduler = require('./dentistscheduler');
+const IntentRecognizer = require('./intentrecognizer');
 
 class DentaBot extends ActivityHandler {
     constructor(configuration, qnaOptions) {
@@ -16,10 +16,10 @@ class DentaBot extends ActivityHandler {
         // create a QnAMaker connector
         this.QnAMaker = new QnAMaker(configuration.QnAConfiguration, qnaOptions);
         // create a DentistScheduler connector
-        // this.dentistScheduler = new DentistScheduler(configuration.SchedulerConfiguration);
+        this.DentistScheduler = new DentistScheduler(configuration.SchedulerConfiguration);
 
         // create a LUIS connector
-        // this.intentRecognizer = new IntentRecognizer(configuration.LuisConfiguration);
+        this.IntentRecognizer = new IntentRecognizer(configuration.LuisConfiguration);
 
         this.onMessage(async (context, next) => {
             // send user input to QnA Maker and collect the response in a variable
@@ -28,7 +28,7 @@ class DentaBot extends ActivityHandler {
 
             // send user input to IntentRecognizer and collect the response in a variable
             // don't forget 'await'
-            // const luis = await this.intentRecognizer.executeLuisQuery(context);
+            const luis = await this.IntentRecognizer.executeLuisQuery(context);
 
             // if (luis.luisResult.prediction.topIntent === 'GetAvailability' &&
             //     luis.intents.GetAvailability.score > 0.6 &&
@@ -59,6 +59,22 @@ class DentaBot extends ActivityHandler {
             //     await next();
             //     return;
             // }
+            
+            if (luis.luisResult.prediction.topIntent === 'ScheduleAppointment' && luis.intents.ScheduleAppointment.score > 0.5) {
+                if (luis.entities.$instance && luis.entities.$instance.time) {
+                    const time = luis.entities.$instance.time[0].text;
+                    const setupAppointment = await this.DentistScheduler.scheduleAppointment(time);
+                    await context.sendActivity(setupAppointment);
+                    await next();
+                    return;
+                }
+            }
+            if (luis.luisResult.prediction.topIntent === 'GetAvailability' && luis.intents.GetAvailability.score > 0.5) {
+                const available = await this.DentistScheduler.getAvailability();
+                await context.sendActivity(available);
+                await next();
+                return;
+            }
 
             // If an answer was received from QnA Maker, send the answer back to the user.
             if (qna[0]) {

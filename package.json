@@ -1,7 +1,7 @@
 {
-    "name": "dentabot",
+    "name": "dentistrybot",
     "version": "1.0.0",
-    "description": "dentabot",
+    "description": "dentistrybot",
     "author": "Microsoft",
     "license": "MIT",
     "main": "index.js",
