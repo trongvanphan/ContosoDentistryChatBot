@@ -30,36 +30,6 @@ class DentaBot extends ActivityHandler {
             // don't forget 'await'
             const luis = await this.IntentRecognizer.executeLuisQuery(context);
 
-            // if (luis.luisResult.prediction.topIntent === 'GetAvailability' &&
-            //     luis.intents.GetAvailability.score > 0.6 &&
-            //     luis.entities.$instance &&
-            //     luis.entities.$instance.datetime &&
-            //     luis.entities.$instance.datetime[0]
-            // ) {
-            //     const datetime = luis.entities.$instance.datetime[0].text;
-
-            //     const getAvailableTime = 'I have a few spots for ' + datetime;
-            //     console.log(getAvailableTime);
-
-            //     await context.sendActivity(getAvailableTime);
-            //     await next();
-            //     return;
-            // }
-
-            // if (luis.luisResult.prediction.topIntent === 'ScheduleAppointment' &&
-            //     luis.intents.ScheduleAppointment.score > 0.6 &&
-            //     luis.entities.$instance &&
-            //     luis.entities.$instance.datetime
-            // ) {
-            //     const datetime = luis.entities.$instance.datetime[0].text;
-            //     const setupAppointment = await this.dentistScheduler.scheduleAppointment(datetime);
-            //     console.log(setupAppointment);
-
-            //     await context.sendActivity(setupAppointment);
-            //     await next();
-            //     return;
-            // }
-            
             if (luis.luisResult.prediction.topIntent === 'ScheduleAppointment' && luis.intents.ScheduleAppointment.score > 0.5) {
                 if (luis.entities.$instance && luis.entities.$instance.time) {
                     const time = luis.entities.$instance.time[0].text;
